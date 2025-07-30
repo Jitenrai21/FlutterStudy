@@ -7,6 +7,7 @@ import 'favorites_screen.dart';
 import '../auth/auth_service.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -15,6 +16,10 @@ class _HomeScreenState extends State<HomeScreen> {
   String city = '';
   Map<String, dynamic>? weatherData;
   bool isLoading = false;
+
+  final Color primaryColor = const Color(0xFF0ABAB5);
+  final Color accentColor = const Color(0xFF56DFCF);
+  final Color highlightColor = const Color(0xFFADEED9);
 
   Future<void> searchWeather() async {
     FocusScope.of(context).unfocus();
@@ -27,15 +32,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget weatherWidget() {
-    if (weatherData == null) return SizedBox();
+    if (weatherData == null) return const SizedBox();
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(20),
-      margin: EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.only(top: 20),
       decoration: BoxDecoration(
-        color: Color(0xFFF8F3CE),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 8, offset: const Offset(0, 4)),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,35 +51,35 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF7A7A73))),
-          SizedBox(height: 8),
+                  color: primaryColor)),
+          const SizedBox(height: 8),
           Text(
             '${weatherData!['main']['temp']}°C',
-            style: TextStyle(
-                fontSize: 42,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF7A7A73)),
+            style: const TextStyle(
+              fontSize: 42,
+              fontWeight: FontWeight.w700,
+              color: Colors.black87,
+            ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Text(
             '${weatherData!['weather'][0]['description']}',
-            style: TextStyle(fontSize: 18, color: Color(0xFF7A7A73)),
+            style: const TextStyle(fontSize: 18, color: Colors.black54),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Align(
             alignment: Alignment.centerRight,
             child: ElevatedButton.icon(
               onPressed: () =>
                   FirestoreService.addCity(weatherData!['name']),
-              icon: Icon(Icons.favorite_border),
-              label: Text("Add to Favorites"),
+              icon: const Icon(Icons.favorite_border),
+              label: const Text("Add to Favorites"),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF7A7A73),
+                backgroundColor: accentColor,
                 foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
             ),
@@ -86,27 +93,27 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
     return Scaffold(
-      backgroundColor: Color(0xFFDDDAD0),
+      backgroundColor: highlightColor,
       appBar: AppBar(
-        backgroundColor: Color(0xFF7A7A73),
-        title: Text('JKR Weather App', style: TextStyle(color: Colors.white)),
-        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: primaryColor,
+        title: const Text('JKR Weather App', style: TextStyle(color: Colors.white)),
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
-            icon: Icon(Icons.favorite),
+            icon: const Icon(Icons.favorite),
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => FavoritesScreen()),
             ),
           ),
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: () => AuthService.signOut(),
           ),
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -115,44 +122,45 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF7A7A73),
+                color: primaryColor,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Color(0xFFF8F3CE),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 3)],
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 6, offset: const Offset(0, 3)),
+                ],
               ),
               child: Column(
                 children: [
                   TextField(
                     decoration: InputDecoration(
                       labelText: 'Enter City',
-                      labelStyle: TextStyle(color: Color(0xFF7A7A73)),
+                      labelStyle: TextStyle(color: primaryColor),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF7A7A73)),
+                        borderSide: BorderSide(color: primaryColor),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    style: TextStyle(color: Colors.black87),
+                    style: const TextStyle(color: Colors.black87),
                     onChanged: (val) => city = val,
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   ElevatedButton.icon(
                     onPressed: searchWeather,
-                    icon: Icon(Icons.search),
-                    label: Text("What's the Weather like?"),
+                    icon: const Icon(Icons.search),
+                    label: const Text("What's the Weather like?"),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF7A7A73),
+                      backgroundColor: primaryColor,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 14),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -162,8 +170,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             if (isLoading)
-              Padding(
-                padding: const EdgeInsets.only(top: 30.0),
+              const Padding(
+                padding: EdgeInsets.only(top: 30.0),
                 child: Center(child: CircularProgressIndicator()),
               ),
             if (!isLoading) weatherWidget(),
